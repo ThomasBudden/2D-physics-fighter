@@ -16,6 +16,9 @@ public class PickupScript : MonoBehaviour
     public LayerMask castLayerMask;
     public Vector2 worldPosition;
     public float targetAngle;
+    public Vector2 hitDirection;
+    public float hitDistance;
+    public float pullMult;
     void Start()
     {
         selecting = true;
@@ -50,18 +53,26 @@ public class PickupScript : MonoBehaviour
         if (selecting == false && target != null)
         {
             rb = target.GetComponent<Rigidbody2D>();
-          /*  targetDisX = worldPosition.x - target.transform.position.x;
+            targetDisX = worldPosition.x - target.transform.position.x;
             targetDisY = worldPosition.y - target.transform.position.y;
             targetAngle = Vector2.Angle(new Vector2(worldPosition.x, target.transform.position.x), new Vector2(worldPosition.y, target.transform.position.y));
             Debug.Log(targetAngle);
-            rb.AddForce(new Vector2(targetDisX * Time.deltaTime, targetDisY * Time.deltaTime));*/
-
-            Vector2 direction = new Vector2(target.transform.position.x , target.transform.position.y) - worldPosition;
-            float signedAngleRad = Mathf.Atan2(direction.y, direction.x);
-            float signedAngleDeg = signedAngleRad * Mathf.Rad2Deg;
-            Debug.Log(signedAngleDeg);
+            rb.AddForce(new Vector2(targetDisX * Time.deltaTime, targetDisY * Time.deltaTime));
 
 
+            hitDirection = new Vector2(target.transform.position.x, target.transform.position.y) - worldPosition;
+            hitDistance = Vector2.Distance(worldPosition, new Vector2(target.transform.position.x, target.transform.position.y));
+            rb.AddForce(((hitDirection * (-40 * (1 / (hitDistance * 10)))) * Time.deltaTime) * pullMult);
         }
+
+
+        /* 
+         //Find signed angle
+         * Vector2 direction = new Vector2(target.transform.position.x , target.transform.position.y) - worldPosition;
+         float signedAngleRad = Mathf.Atan2(direction.y, direction.x);
+         float signedAngleDeg = signedAngleRad * Mathf.Rad2Deg;
+         Debug.Log(signedAngleDeg);*/
+
+
     }
 }
